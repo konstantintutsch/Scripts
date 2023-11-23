@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JDIR="${HOME}/Dokumente/Journal"
+JDIR="${HOME}/Documents/Journal"
 
 if [[ "$1" = "cat" ]]
 then

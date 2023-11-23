@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCAL="$HOME/Anwendungen/$HOSTNAME"
+LOCAL="$HOME/Applications/$HOSTNAME"
 CURR_DIR="$(pwd)"
 
 if [[ "$1" ]]
@@ -14,6 +14,6 @@ then
 	
 	cd "$CURR_DIR" || exit
 else 
-	echo "Konfigurationsdatei muss angegeben werden."
+	echo "A configuration needs to be specified"
 	exit 1
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NDIR="${HOME}/Dokumente/Notizen"
+NDIR="${HOME}/Documents/Notes"
 
 if [[ "$1" = "cat" ]]
 then
