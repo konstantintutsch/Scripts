@@ -18,7 +18,13 @@ printf "\n"
 
 
 # Ports
-ports[0]="22/tcp"     # SSH !! IMPORTANT
+ports[0]="22/tcp"   # SSH !! IMPORTANT
+ports[1]="22000/tcp" # Syncthing
+ports[2]="21027/udp" # Syncthing
+ports[3]="22000/udp" # Syncthing
+ports[4]="53317/udp" # LocalSend Multicast
+ports[5]="53317/tcp" # LocalSend
+ports[6]="8000/tcp"  # $ jekyll serve (test website on different devices and browsers)
 
 for port in "${ports[@]}"
 do
