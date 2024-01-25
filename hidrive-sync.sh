@@ -12,6 +12,7 @@
 
 notification() {
     notify-send "$1" "$2"
+    echo "$2"
 }
 
 if [[ $2 != "skipnetworkcheck" ]]
@@ -30,7 +31,7 @@ else
     echo "Skipping network check …"
 fi
 
-RSYNC_ARGS='-PaEzve "ssh" \
+RSYNC_ARGS='--update -PaEzve "ssh" \
             --exclude "*cache*" \
             --exclude "*Cache*" \
             --exclude "*thumbnails*" \
@@ -48,7 +49,7 @@ push() {
 }
 pull() {
     notification "$0" "Pulling …"
-    eval "rsync $RSYNC_ARGS --update ${HIDRIVE}/ ${LOCAL_FOLDER}"
+    eval "rsync $RSYNC_ARGS ${HIDRIVE}/ ${LOCAL_FOLDER}"
 }
 
 if [[ -z $1 ]]
