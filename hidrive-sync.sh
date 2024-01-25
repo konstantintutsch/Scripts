@@ -39,7 +39,14 @@ RSYNC_ARGS='--update -PaEzve "ssh" \
             --exclude ".local/share/Trash" \
             --exclude ".local/share/baloo" \
             --exclude ".local/share/flatpak" \
-            --exclude ".mnt"'
+            --exclude ".mnt" \
+            --exclude "Public" \
+            --exclude "Downloads" \
+            --exclude "Desktop" \
+            --exclude ".java" \
+            --exclude ".gphoto" \
+            --exclude ".pki" \
+            --exclude ".tcc"'
 LOCAL_FOLDER="${HOME}"
 HIDRIVE="${HIDRIVE_USER}@rsync.hidrive.strato.com:/users/${HIDRIVE_USER}"
 
