@@ -10,6 +10,10 @@
 #
 # upload SSH public key to HiDrive
 
+notification() {
+    notify-send "$1" "$2"
+}
+
 if [[ $2 != "skipnetworkcheck" ]]
 then
     count=0
@@ -17,7 +21,7 @@ then
     while [[ -z "$(ip address | grep -F "192.168.178.")" ]]
     do
         count=$((count+1))
-        if [[ $count -gt 15 ]]; then echo "Timeout after 15s"; exit; fi
+        if [[ $count -gt 15 ]]; then notification "$0" "Network timeout after 15s"; exit; fi
         echo "${count} - Waiting for network connection …"
         sleep 1
     done
@@ -26,7 +30,7 @@ else
     echo "Skipping network check …"
 fi
 
-RSYNC_ARGS='-PzrltDve "ssh" \
+RSYNC_ARGS='-PaEzve "ssh" \
             --exclude "*cache*" \
             --exclude "*Cache*" \
             --exclude "*thumbnails*" \
@@ -39,12 +43,12 @@ LOCAL_FOLDER="${HOME}"
 HIDRIVE="${HIDRIVE_USER}@rsync.hidrive.strato.com:/users/${HIDRIVE_USER}"
 
 push() {
-    echo "Pushing …"
+    notification "$0" "Pushing …"
     eval "rsync $RSYNC_ARGS --delete --delete-excluded ${LOCAL_FOLDER}/ ${HIDRIVE}"
 }
 pull() {
-    echo "Pulling …"
-    eval "rsync $RSYNC_ARGS ${HIDRIVE}/ ${LOCAL_FOLDER}"
+    notification "$0" "Pulling …"
+    eval "rsync $RSYNC_ARGS --update ${HIDRIVE}/ ${LOCAL_FOLDER}"
 }
 
 if [[ -z $1 ]]
@@ -65,3 +69,5 @@ then
 else
     echo "Unknown: ${FIRST}"
 fi
+
+notification "$0" "Sync complete"
