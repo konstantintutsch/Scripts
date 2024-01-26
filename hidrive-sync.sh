@@ -31,7 +31,14 @@ else
     echo "Skipping network check …"
 fi
 
-RSYNC_ARGS='--update -PaEzve "ssh" \
+RSYNC_ARGS='--human-readable \
+            --partial \
+            --progress \
+            --archive \
+            --executability \
+            --compress \
+            --verbose \
+            --rsh=ssh \
             --exclude "*cache*" \
             --exclude "*Cache*" \
             --exclude "*thumbnails*" \
@@ -46,7 +53,9 @@ RSYNC_ARGS='--update -PaEzve "ssh" \
             --exclude ".java" \
             --exclude ".gphoto" \
             --exclude ".pki" \
-            --exclude ".tcc"'
+            --exclude ".tcc" \
+            --update'
+
 LOCAL_FOLDER="${HOME}"
 HIDRIVE="${HIDRIVE_USER}@rsync.hidrive.strato.com:/users/${HIDRIVE_USER}"
 
@@ -75,7 +84,8 @@ then
     push
     pull
 else
-    echo "Unknown: ${FIRST}"
+    notification "$0" "Unknown action: ${FIRST}"
+    exit 1
 fi
 
 notification "$0" "Sync complete"
