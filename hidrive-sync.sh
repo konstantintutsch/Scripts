@@ -60,11 +60,11 @@ LOCAL_FOLDER="${HOME}"
 HIDRIVE="${HIDRIVE_USER}@rsync.hidrive.strato.com:/users/${HIDRIVE_USER}"
 
 push() {
-    notification "$0" "Pushing …"
+    echo "Pushing …"
     eval "rsync $RSYNC_ARGS --delete --delete-excluded ${LOCAL_FOLDER}/ ${HIDRIVE}"
 }
 pull() {
-    notification "$0" "Pulling …"
+    echo "Pulling …"
     eval "rsync $RSYNC_ARGS ${HIDRIVE}/ ${LOCAL_FOLDER}"
 }
 
