@@ -1,6 +1,6 @@
 #1/bin/bash
 
-GPG_EXP_DIR="${HOME}/Anwendungen/GPG"
+GPG_EXP_DIR="${HOME}/Documents/Software/GPG"
 
 if [[ -z "${1}" ]]
 then

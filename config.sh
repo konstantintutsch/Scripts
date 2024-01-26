@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCAL="$HOME/Applications/$HOSTNAME"
+LOCAL="$HOME/Documents/Software/$HOSTNAME"
 CURR_DIR="$(pwd)"
 
 if [[ "$1" ]]
