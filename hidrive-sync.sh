@@ -61,7 +61,7 @@ HIDRIVE="${HIDRIVE_USER}@rsync.hidrive.strato.com:/users/${HIDRIVE_USER}"
 
 push() {
     echo "Pushing …"
-    eval "rsync $RSYNC_ARGS --delete --delete-excluded ${LOCAL_FOLDER}/ ${HIDRIVE}"
+    eval "rsync $RSYNC_ARGS --delete --delete-excluded --force ${LOCAL_FOLDER}/ ${HIDRIVE}"
 }
 pull() {
     echo "Pulling …"
