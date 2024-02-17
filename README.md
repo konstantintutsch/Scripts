@@ -1,6 +1,7 @@
-```
-Copyright (C)  2022-2023  Konstantin Tutsch
-These scripts are distributed under the GNU General Public License.
-```
+# Scripts
 
 Konstantin Tutsch's personal scripts.
+
+## Licensing
+
+All code is licensed under the [MIT License](LICENSE)
