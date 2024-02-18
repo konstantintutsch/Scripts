@@ -13,12 +13,6 @@ read -p "Does your system run Docker? [y/n]: " docker
 # Get interface for setup
 if [[ "$setup" == "y" ]]
 then
-    ip addr
-    read -p "Which interface does your system use? [eth0/enp2s0/…]: " interface
-
-    printf "Adding interface to zone: "
-    firewall-cmd --zone=public --add-interface="$1"
-
     printf "Selecting default zone: "
     firewall-cmd --set-default-zone=public
 
