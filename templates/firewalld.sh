@@ -1,67 +1,34 @@
 #!/bin/bash
 
-# On Gentoo Linux systems:
-#
-# /etc/firewalld/firewalld.conf:
-# IndividiualCalls=yes
-#
+# /etc/firewalld/firewalld.conf: IndividiualCalls=yes
 # firewall-cmd --reload won't work otherwise
 
-read -p "Are you running this script for the first time? [y/n]: " setup
-read -p "Does your system run Docker? [y/n]: " docker
+printf "set default zone to drop:\n"
+firewall-cmd --set-default-zone=drop
+printf "\n"
 
-# Get interface for setup
-if [[ "$setup" == "y" ]]
-then
-    printf "Selecting default zone: "
-    firewall-cmd --set-default-zone=public
 
-    printf "Allowing ping:\n"
-    firewall-cmd --add-icmp-block-inversion
-    firewall-cmd --add-icmp-block=echo-reply
-    firewall-cmd --add-icmp-block=echo-request
-else
-    printf "Skipping setup …\n"
-fi
-
-if [[ "$docker" == "y" ]]
-then
-    printf "Stopping Docker …\n"
-    systemctl stop docker
-
-    printf "Disabeling iptables usage in Docker …\n"
-    echo '{
-"iptables": false
-}' > /etc/docker/daemon.json
-
-    printf "Adding Docker compatibility to FirewallD configuration …\n"
-    firewall-cmd --zone=public --add-masquerade
-      
-    printf "Starting Docker …\n"
-    systemctl start docker
-else
-    printf "Skipping Docker compatibility setup …\n"
-fi
-
-# Close current open ports
-OPEN_PORTS="$(firewall-cmd --list-ports)"
-for PORT in $OPEN_PORTS
+open_ports="$(firewall-cmd --list-ports)"
+for open_port in $open_ports
 do
-	printf "Remove %s: " "$PORT"
-	firewall-cmd --remove-port="$PORT"
+	printf "remove %s: " "$open_port"
+	firewall-cmd --remove-port="$open_port"
+done
+printf "\n"
+
+
+# Ports
+ports[0]="22/tcp"   # SSH !! IMPORTANT
+
+for port in "${ports[@]}"
+do
+	printf "add %s: " "$port"
+	firewall-cmd --add-port="$port"
 done
 
-# Open new ports
-PORTS[0]="22/tcp"    # SSH !! IMPORTANT
 
-for PORT in "${PORTS[@]}"
-do
-	printf "Add %s: " "$PORT"
-	firewall-cmd --add-port="$PORT"
-done
-
-printf "Making changes permanent: "
+printf "\nmaking changes permanent: "
 firewall-cmd --runtime-to-permanent
 
-printf "Reloading: "
+printf "reloading: "
 firewall-cmd --reload
