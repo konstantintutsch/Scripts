@@ -1,7 +1,7 @@
 # Scripts
 
-Konstantin Tutsch's personal scripts.
+Personal scripts without special purpose.
 
 ## Licensing
 
-All code is licensed under the [MIT License](LICENSE)
+All code licensed under the [MIT License](LICENSE).
