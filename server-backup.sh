@@ -141,6 +141,7 @@ download "/etc/httpd/conf.d/sftpgo.conf" "${SFTPGO}/${COPY_WEBSERVER}"
 WEBSERVER="httpd"
 
 download "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
+download "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
 
 #
 # System
