@@ -11,11 +11,13 @@ trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occ
 DATE="$(date +%Y%m%d)"
 
 HOST="rpi-homeserver" # The server to connect to
+VPS="konstantintutsch.com"
 ADDRESS_SPACE="192.168.178." # The server's network address space - if SSH is only possible from within this network
 
 # Locations
-DATA_DIRECTORY="/mnt/storage"
-BACKUP_DIRECTORY="${HOME}/RaspberryPi" # The backup location
+DATA_DIRECTORY_LOCAL="/mnt/storage"
+DATA_DIRECTORY_VPS="/mnt/HC_Volume_101048932"
+BACKUP_DIRECTORY="${HOME}/Hosting" # The backup location
 
 # Copy names
 COPY_INIT="systemd.service"
@@ -70,8 +72,15 @@ done
 echo "Connected!"
 
 download() {
-    mkdir -p "${BACKUP_DIRECTORY}/$(dirname $2)"
-    scp "root"@"$HOST":"$1" "${BACKUP_DIRECTORY}/$2"
+    mkdir -p "${BACKUP_DIRECTORY}/$(dirname $4)"
+    scp "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$4"
+}
+
+downloadlocal() {
+    download "$HOST" "root" "$1" "$2"
+}
+downloadvps() {
+    download "$VPS" "konstantin" "$1" "$2"
 }
 
 if [[ ! -d "${BACKUP_DIRECTORY}" ]]
@@ -85,26 +94,26 @@ fi
 
 RADICALE="radicale"
 
-download "/etc/radicale/config" "${RADICALE}/config"
-download "/etc/systemd/system/radicale.service" "${RADICALE}/${COPY_INIT}"
-download "/etc/httpd/conf.d/radicale.conf" "${RADICALE}/${COPY_WEBSERVER}"
-rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY}/radicale/radicale" "${BACKUP_DIRECTORY}/${RADICALE}/directory"
+downloadlocal "/etc/radicale/config" "${RADICALE}/config"
+downloadlocal "/etc/systemd/system/radicale.service" "${RADICALE}/${COPY_INIT}"
+downloadlocal "/etc/httpd/conf.d/radicale.conf" "${RADICALE}/${COPY_WEBSERVER}"
+rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/radicale/radicale" "${BACKUP_DIRECTORY}/${RADICALE}/directory"
 
 #
 # Umami
 #
 
 UMAMI="umami"
-UMAMI_DB="${DATA_DIRECTORY}/umami.sql"
+UMAMI_DB="~/umami.sql"
 # UMAMI_DB_NAME
 # UMAMI_DB_USER
 # UMAMI_DB_PASSWORD
 
-ssh "root"@"$HOST" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
-download "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
-ssh "root"@"$HOST" "rm ${UMAMI_DB}"
-download "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
-download "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
+ssh "konstantin"@"$VPS" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
+downloadvps "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
+ssh "konstantin"@"$VPS" "rm ${UMAMI_DB}"
+downloadvps "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
+downloadvps "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 #
 # DDClient
@@ -113,26 +122,26 @@ download "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 DDCLIENT="ddclient"
 DDCLIENT_PREFIX="ddclient"
 
-download "/etc/ddclient4.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}4.conf"
-download "/etc/ddclient6.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}6.conf"
-download "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/ddclient@.service"
+downloadlocal "/etc/ddclient4.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}4.conf"
+downloadlocal "/etc/ddclient6.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}6.conf"
+downloadlocal "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/ddclient@.service"
 
 #
 # SFTPGo
 #
 
 SFTPGO="sftpgo"
-SFTPGO_DB="${DATA_DIRECTORY}/sftpgo.sql"
+SFTPGO_DB="${DATA_DIRECTORY_LOCAL}/sftpgo.sql"
 # SFTPGO_DB_NAME
 # SFTPGO_DB_USER
 # SFTPGO_DB_PASSWORD
 
 ssh "root"@"$HOST" "mariadb-dump -u${SFTPGO_DB_USER} -p${SFTPGO_DB_PASSWORD} ${SFTPGO_DB_NAME} > ${SFTPGO_DB}"
-download "${SFTPGO_DB}" "${SFTPGO}/${COPY_DATABASE}"
+downloadlocal "${SFTPGO_DB}" "${SFTPGO}/${COPY_DATABASE}"
 ssh "root"@"$HOST" "rm ${SFTPGO_DB}"
-download "/etc/sftpgo/sftpgo.json" "${SFTPGO}/sftpgo.json"
-rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY}/sftpgo" "${BACKUP_DIRECTORY}/${SFTPGO}/directory"
-download "/etc/httpd/conf.d/sftpgo.conf" "${SFTPGO}/${COPY_WEBSERVER}"
+downloadlocal "/etc/sftpgo/sftpgo.json" "${SFTPGO}/sftpgo.json"
+rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/sftpgo" "${BACKUP_DIRECTORY}/${SFTPGO}/directory"
+downloadlocal "/etc/httpd/conf.d/sftpgo.conf" "${SFTPGO}/${COPY_WEBSERVER}"
 
 #
 # Websites
@@ -140,8 +149,8 @@ download "/etc/httpd/conf.d/sftpgo.conf" "${SFTPGO}/${COPY_WEBSERVER}"
 
 WEBSERVER="httpd"
 
-download "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
-download "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
+downloadvps "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
+downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
 
 #
 # System
@@ -149,9 +158,11 @@ download "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintu
 
 DNF="dnf"
 
-download "/etc/fstab" "fstab"
-download "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
-download "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
+downloadlocal "/etc/fstab" "fstab"
+downloadlocal "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
+downloadvps "/etc/dnf/automatic.conf" "${DNF}/automatic-vps.conf"
+downloadlocal "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
+downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail-vps.sh"
 
 #
 # Success
