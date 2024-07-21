@@ -116,17 +116,6 @@ downloadvps "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
 downloadvps "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 #
-# DDClient
-#
-
-DDCLIENT="ddclient"
-DDCLIENT_PREFIX="ddclient"
-
-downloadlocal "/etc/ddclient4.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}4.conf"
-downloadlocal "/etc/ddclient6.conf" "${DDCLIENT}/${DDCLIENT_PREFIX}6.conf"
-downloadlocal "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/ddclient@.service"
-
-#
 # SFTPGo
 #
 
