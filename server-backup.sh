@@ -143,6 +143,12 @@ downloadvps "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstant
 downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
 
 #
+# Fail2Ban
+#
+
+downloadvps "/etc/fail2ban/jail.local" "fail2ban/jail.local"
+
+#
 # System
 #
 
