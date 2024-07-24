@@ -146,6 +146,7 @@ downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstanti
 # Fail2Ban
 #
 
+downloadvps "/etc/firewalld/zones/all.xml" "fail2ban/firewalld-all.xml"
 downloadvps "/etc/fail2ban/jail.local" "fail2ban/jail.local"
 
 #
