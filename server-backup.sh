@@ -160,7 +160,6 @@ downloadlocal "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
 downloadvps "/etc/dnf/automatic.conf" "${DNF}/automatic-vps.conf"
 downloadlocal "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
 downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail-vps.sh"
-downloadvps "/etc/ssh/sshd_config" "sshd_config"
 
 #
 # Success
