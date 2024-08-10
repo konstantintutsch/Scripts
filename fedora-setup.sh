@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 
-SYSTEM_REPOSITORIES=("kallepm/tuxedo-keyboard" "kallepm/tuxedo-control-center")
+SYSTEM_REPOSITORIES=("kallepm/tuxedo-drivers" "kallepm/tuxedo-control-center")
 SYSTEM_REPOSITORIES_EXTERNAL=("dnf install --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' --setopt='terra.gpgkey=https://repos.fyralabs.com/terra$releasever/key.asc' terra-release")
 
 # RPMs
 # Generate: for package in $(dnf repoquery --userinstalled --queryformat "%{name}"); do printf "\"%s\" " "${package}"; done; printf "\n"
 #     + manual sort
-SYSTEM_PACKAGES=("aajohan-comfortaa-fonts" "adw-gtk3-theme" "arm-image-installer" "cargo" "fuse-sshfs" "git-filter-repo" "git-lfs" "gnome-console" "gnome-tweaks" "gstreamer1-plugin-openh264" "gstreamer1-plugins-bad-free-extras" "gstreamer1-plugins-bad-free-fluidsynth" "gstreamer1-plugins-bad-free-opencv" "gstreamer1-plugins-bad-free-wildmidi" "gstreamer1-plugins-bad-free-zbar" "gstreamer1-plugins-good-extras" "gstreamer1-plugins-good-qt6" "htop" "mozilla-fira-mono-fonts" "ncdu" "nodejs" "perl-Image-ExifTool" "rust" "rustfmt" "solaar" "source-foundry-hack-fonts" "tlp" "toot" "totem" "tuxedo-control-center" "tuxedo-keyboard" "ufraw" "yt-dlp" "zed" "zoxide")
+SYSTEM_PACKAGES=("aajohan-comfortaa-fonts" "adw-gtk3-theme" "arm-image-installer" "cargo" "fuse-sshfs" "git-filter-repo" "git-lfs" "gnome-console" "gnome-tweaks" "gstreamer1-plugin-openh264" "gstreamer1-plugins-bad-free-extras" "gstreamer1-plugins-bad-free-fluidsynth" "gstreamer1-plugins-bad-free-opencv" "gstreamer1-plugins-bad-free-wildmidi" "gstreamer1-plugins-bad-free-zbar" "gstreamer1-plugins-good-extras" "gstreamer1-plugins-good-qt6" "htop" "mozilla-fira-mono-fonts" "ncdu" "nodejs" "perl-Image-ExifTool" "rust" "rustfmt" "solaar" "source-foundry-hack-fonts" "tlp" "toot" "totem" "tuxedo-control-center" "tuxedo-drivers" "ufraw" "yt-dlp" "zed" "zoxide")
 
 # Flatpaks
 # Generate: for package in $(flatpak list --user --app --columns=application); do printf "\"%s\" " "${package}"; done; printf "\n"
