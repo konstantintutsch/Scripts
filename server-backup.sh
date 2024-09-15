@@ -162,6 +162,16 @@ downloadlocal "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
 downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail-vps.sh"
 
 #
+# PCP
+#
+
+PCP="pcp"
+
+mkdir -p "${BACKUP_DIRECTORY}/${PCP}"
+rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/pcp" "${BACKUP_DIRECTORY}/${PCP}/rpi-homeserver"
+rsync -Avrlt --del --force "konstantin"@"$VPS":"${DATA_DIRECTORY_VPS}/pcp" "${BACKUP_DIRECTORY}/${PCP}/vps"
+
+#
 # Success
 #
 
