@@ -141,6 +141,7 @@ WEBSERVER="httpd"
 downloadvps "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
 downloadvps "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
 downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
+downloadvps "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 
 #
 # Fail2Ban
