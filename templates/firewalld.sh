@@ -16,6 +16,17 @@ do
 done
 printf "\n"
 
+# Ping
+printf "allow ping: "
+firewall-cmd --add-icmp-block-inversion
+
+printf "allow ping reply: "
+firewall-cmd --add-icmp-block=echo-reply
+
+printf "allow ping request: "
+firewall-cmd --add-icmp-block=echo-request
+
+printf "\n"
 
 # Ports
 ports[0]="22/tcp"   # SSH !! IMPORTANT
