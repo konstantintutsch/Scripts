@@ -120,7 +120,7 @@ downloadvps "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 # Syncthing
 #
 
-#downloadlocal "/home/syncthing/.local/state/syncthing/config.xml" "syncthing.xml"
+download "$LOCAL" "syncthing" "/home/syncthing/.local/state/syncthing/config.xml" "${LOCAL}/syncthing.xml"
 
 #
 # sabre/dav
