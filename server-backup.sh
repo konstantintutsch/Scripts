@@ -10,13 +10,12 @@ trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occ
 
 DATE="$(date +%Y%m%d)"
 
-HOST="rpi-homeserver" # The server to connect to
+LOCAL="notolaf" # The server to connect to
 VPS="konstantintutsch.com"
 ADDRESS_SPACE="192.168.178." # The server's network address space - if SSH is only possible from within this network
 
 # Locations
 DATA_DIRECTORY_LOCAL="/mnt/storage"
-DATA_DIRECTORY_VPS="/mnt/HC_Volume_101048932"
 BACKUP_DIRECTORY="${HOME}/Hosting" # The backup location
 
 # Copy names
@@ -77,27 +76,16 @@ download() {
 }
 
 downloadlocal() {
-    download "$HOST" "root" "$1" "$2"
+    download "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
 }
 downloadvps() {
-    download "$VPS" "konstantin" "$1" "$2"
+    download "$VPS" "konstantin" "$1" "${VPS}/$2"
 }
 
 if [[ ! -d "${BACKUP_DIRECTORY}" ]]
 then
     mkdir -p "${BACKUP_DIRECTORY}"
 fi
-
-#
-# Radicale
-#
-
-RADICALE="radicale"
-
-downloadlocal "/etc/radicale/config" "${RADICALE}/config"
-downloadlocal "/etc/systemd/system/radicale.service" "${RADICALE}/${COPY_INIT}"
-downloadlocal "/etc/httpd/conf.d/radicale.conf" "${RADICALE}/${COPY_WEBSERVER}"
-rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/radicale/radicale" "${BACKUP_DIRECTORY}/${RADICALE}/directory"
 
 #
 # Umami
@@ -116,61 +104,64 @@ downloadvps "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
 downloadvps "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 #
-# SFTPGo
-#
-
-SFTPGO="sftpgo"
-SFTPGO_DB="${DATA_DIRECTORY_LOCAL}/sftpgo.sql"
-# SFTPGO_DB_NAME
-# SFTPGO_DB_USER
-# SFTPGO_DB_PASSWORD
-
-ssh "root"@"$HOST" "mariadb-dump -u${SFTPGO_DB_USER} -p${SFTPGO_DB_PASSWORD} ${SFTPGO_DB_NAME} > ${SFTPGO_DB}"
-downloadlocal "${SFTPGO_DB}" "${SFTPGO}/${COPY_DATABASE}"
-ssh "root"@"$HOST" "rm ${SFTPGO_DB}"
-downloadlocal "/etc/sftpgo/sftpgo.json" "${SFTPGO}/sftpgo.json"
-rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/sftpgo" "${BACKUP_DIRECTORY}/${SFTPGO}/directory"
-downloadlocal "/etc/httpd/conf.d/sftpgo.conf" "${SFTPGO}/${COPY_WEBSERVER}"
-
-#
 # Websites
 #
 
 WEBSERVER="httpd"
 
 downloadvps "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
+downloadlocal "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
+
 downloadvps "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
 downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
 downloadvps "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 
 #
-# Fail2Ban
+# Syncthing
 #
 
-downloadvps "/etc/firewalld/zones/all.xml" "fail2ban/firewalld-all.xml"
-downloadvps "/etc/fail2ban/jail.local" "fail2ban/jail.local"
+#downloadlocal "/home/syncthing/.local/state/syncthing/config.xml" "syncthing.xml"
+
+#
+# sabre/dav
+#
+
+SABREDAV="sabredav"
+SABREDAV_DB="~/umami.sql"
+# SABREDAV_DB_NAME
+# SABREDAV_DB_USER
+# SABREDAV_DB_PASSWORD
+
+ssh "konstantin"@"$LOCAL" "mariadb-dump -u${SABREDAV_DB_USER} -p${SABREDAV_DB_PASSWORD} ${SABREDAV_DB_NAME} > ${SABREDAV_DB}"
+downloadlocal "${SABREDAV_DB}" "${SABREDAV}/${COPY_DATABASE}"
+ssh "konstantin"@"$LOCAL" "rm ${SABREDAV_DB}"
+downloadlocal "/etc/httpd/conf.d/sabredav.conf" "${SABREDAV}/${COPY_WEBSERVER}"
+rsync --verbose --archive --recursive --delete "konstantin"@"$LOCAL":"/var/www/sabredav" "${BACKUP_DIRECTORY}/${LOCAL}/${SABREDAV}/directory"
+
+#
+# PHP
+#
+
+downloadlocal "/etc/php.ini" "${SABREDAV}/php/php.ini"
+downloadlocal "/etc/php.d/10-opcache.ini" "${SABREDAV}/php/php.10-opcache.ini"
+
+downloadlocal "/etc/php-fpm.conf" "${SABREDAV}/php/php-fpm.conf"
+downloadlocal "/etc/php-fpm.d/www.conf" "${SABREDAV}/php/php-fpm.www.conf"
 
 #
 # System
 #
 
 DNF="dnf"
+FAIL2BAN="fail2ban"
 
-downloadlocal "/etc/fstab" "fstab"
+downloadlocal "~/firewalld.sh" "firewalld.sh"
+downloadvps "/etc/firewalld/zones/all.xml" "fail2ban/firewalld-all.xml"
+downloadvps "/etc/fail2ban/jail.local" "fail2ban/jail.local"
 downloadlocal "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
-downloadvps "/etc/dnf/automatic.conf" "${DNF}/automatic-vps.conf"
-downloadlocal "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
-downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail-vps.sh"
-
-#
-# PCP
-#
-
-PCP="pcp"
-
-mkdir -p "${BACKUP_DIRECTORY}/${PCP}"
-rsync -Avrlt --del --force "root"@"$HOST":"${DATA_DIRECTORY_LOCAL}/pcp" "${BACKUP_DIRECTORY}/${PCP}/rpi-homeserver"
-rsync -Avrlt --del --force "konstantin"@"$VPS":"${DATA_DIRECTORY_VPS}/pcp" "${BACKUP_DIRECTORY}/${PCP}/vps"
+downloadvps "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
+downloadlocal "~/dnfmail.sh" "${DNF}/dnfmail.sh"
+downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
 
 #
 # Success
