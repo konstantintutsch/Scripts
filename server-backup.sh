@@ -139,6 +139,18 @@ downloadlocal "/etc/httpd/conf.d/sabredav.conf" "${SABREDAV}/${COPY_WEBSERVER}"
 rsync --verbose --archive --recursive --delete "konstantin"@"$LOCAL":"/var/www/sabredav" "${BACKUP_DIRECTORY}/${LOCAL}/${SABREDAV}/directory"
 
 #
+# Conduit
+#
+
+CONDUIT="conduit"
+
+downloadlocal "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
+downloadlocal "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
+download "$LOCAL" "conduit" "/home/conduit/download.sh" "${LOCAL}/${CONDUIT}/download.sh"
+download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/config.toml"
+rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
+
+#
 # PHP
 #
 
