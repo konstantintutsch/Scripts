@@ -151,14 +151,6 @@ download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/con
 rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
 
 #
-# Ollama
-#
-
-OLLAMA="ollama"
-
-downloadlocal "/etc/httpd/conf.d/ollama.conf" "${OLLAMA}/${COPY_WEBSERVER}"
-
-#
 # PHP
 #
 
