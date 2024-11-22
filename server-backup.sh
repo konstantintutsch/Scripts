@@ -97,11 +97,11 @@ UMAMI_DB="~/umami.sql"
 # UMAMI_DB_USER
 # UMAMI_DB_PASSWORD
 
-ssh "konstantin"@"$VPS" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
-downloadvps "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
-ssh "konstantin"@"$VPS" "rm ${UMAMI_DB}"
-downloadvps "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
-downloadvps "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
+ssh "konstantin"@"$LOCAL" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
+downloadlocal "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
+ssh "konstantin"@"$LOCAL" "rm ${UMAMI_DB}"
+downloadlocal "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
+downloadlocal "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 #
 # Websites
