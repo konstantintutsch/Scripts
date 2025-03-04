@@ -123,22 +123,6 @@ downloadvps "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 download "$LOCAL" "syncthing" "/home/syncthing/.local/state/syncthing/config.xml" "${LOCAL}/syncthing.xml"
 
 #
-# sabre/dav
-#
-
-SABREDAV="sabredav"
-SABREDAV_DB="~/umami.sql"
-# SABREDAV_DB_NAME
-# SABREDAV_DB_USER
-# SABREDAV_DB_PASSWORD
-
-ssh "konstantin"@"$LOCAL" "mariadb-dump -u${SABREDAV_DB_USER} -p${SABREDAV_DB_PASSWORD} ${SABREDAV_DB_NAME} > ${SABREDAV_DB}"
-downloadlocal "${SABREDAV_DB}" "${SABREDAV}/${COPY_DATABASE}"
-ssh "konstantin"@"$LOCAL" "rm ${SABREDAV_DB}"
-downloadlocal "/etc/httpd/conf.d/sabredav.conf" "${SABREDAV}/${COPY_WEBSERVER}"
-rsync --verbose --archive --recursive --delete "konstantin"@"$LOCAL":"/var/www/sabredav" "${BACKUP_DIRECTORY}/${LOCAL}/${SABREDAV}/directory"
-
-#
 # Conduit
 #
 
