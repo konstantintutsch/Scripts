@@ -13,9 +13,15 @@ for APP in "${HOME}/.var/app/"*
 do
     ID="$(basename ${APP})"
     FLATPAK="${APP}/data/fonts"
+    FONT="${APP}/config/fontconfig"
 
+    # Install
     mkdir --verbose --parent "${FLATPAK}"
     cp --verbose "${SOURCE}" "${FLATPAK}"
+
+    # Disable
+    mkdir --verbose --parent "${FONT}"
+    echo "<selectfont><rejectfont><glob>/usr/share/fonts/noto-emoji/*</glob></rejectfont></selectfont>" > "${FONT}/fonts.conf"
 
     flatpak run --command=fc-cache "${ID}" --verbose --force
 done
