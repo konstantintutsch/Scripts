@@ -21,7 +21,7 @@ do
 
     # Disable
     mkdir --verbose --parent "${FONT}"
-    echo "<selectfont><rejectfont><glob>/usr/share/fonts/noto-emoji/*</glob><glob>/usr/share/fonts/google-noto-color-emoji-fonts/*</glob></rejectfont></selectfont>" > "${FONT}/fonts.conf"
+    echo "<selectfont><rejectfont><glob>*NotoColorEmoji.ttf*</glob><glob>/usr/share/fonts/noto-emoji/*</glob><glob>/usr/share/fonts/google-noto-color-emoji-fonts/*</glob></rejectfont></selectfont>" > "${FONT}/fonts.conf"
 
     flatpak run --command=fc-cache "${ID}" --verbose --force
 done
