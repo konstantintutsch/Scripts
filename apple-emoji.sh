@@ -19,7 +19,7 @@ do
     mkdir --verbose --parent "${FLATPAK}"
     cp --verbose "${SOURCE}" "${FLATPAK}"
 
-    # Disable
+    # Disable alternative emoji fonts
     mkdir --verbose --parent "${FONT}"
     echo "<selectfont><rejectfont><glob>*NotoColorEmoji.ttf*</glob><glob>/usr/share/fonts/noto-emoji/*</glob><glob>/usr/share/fonts/google-noto-color-emoji-fonts/*</glob></rejectfont></selectfont>" > "${FONT}/fonts.conf"
 
