@@ -11,7 +11,6 @@ trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occ
 DATE="$(date +%Y%m%d)"
 
 LOCAL="notolaf" # The server to connect to
-VPS="konstantintutsch.com"
 ADDRESS_SPACE="192.168.178." # The server's network address space - if SSH is only possible from within this network
 
 # Locations
@@ -78,9 +77,6 @@ download() {
 downloadlocal() {
     download "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
 }
-downloadvps() {
-    download "$VPS" "konstantin" "$1" "${VPS}/$2"
-}
 
 if [[ ! -d "${BACKUP_DIRECTORY}" ]]
 then
@@ -109,12 +105,11 @@ downloadlocal "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 WEBSERVER="httpd"
 
-downloadvps "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
 downloadlocal "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
 
-downloadvps "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
-downloadvps "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
-downloadvps "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
+downloadlocal "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
+downloadlocal "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
+downloadlocal "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 
 #
 # Syncthing
@@ -152,12 +147,8 @@ DNF="dnf"
 FAIL2BAN="fail2ban"
 
 downloadlocal "~/firewalld.sh" "firewalld.sh"
-downloadvps "/etc/firewalld/zones/all.xml" "fail2ban/firewalld-all.xml"
-downloadvps "/etc/fail2ban/jail.local" "fail2ban/jail.local"
 downloadlocal "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
-downloadvps "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
 downloadlocal "~/dnfmail.sh" "${DNF}/dnfmail.sh"
-downloadvps "/root/dnfmail.sh" "${DNF}/dnfmail.sh"
 
 #
 # Success
