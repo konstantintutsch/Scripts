@@ -130,6 +130,16 @@ download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/con
 rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
 
 #
+# DDClient
+#
+
+DDCLIENT="ddclient"
+
+downloadlocal "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/${COPY_INIT}"
+downloadlocal "/etc/ddclient-konstantintutsch.de" "${DDCLIENT}"
+downloadlocal "/etc/ddclient-konstantintutsch.com" "${DDCLIENT}"
+
+#
 # System
 #
 
