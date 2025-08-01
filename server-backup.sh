@@ -130,16 +130,6 @@ download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/con
 rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
 
 #
-# PHP
-#
-
-downloadlocal "/etc/php.ini" "${SABREDAV}/php/php.ini"
-downloadlocal "/etc/php.d/10-opcache.ini" "${SABREDAV}/php/php.10-opcache.ini"
-
-downloadlocal "/etc/php-fpm.conf" "${SABREDAV}/php/php-fpm.conf"
-downloadlocal "/etc/php-fpm.d/www.conf" "${SABREDAV}/php/php-fpm.www.conf"
-
-#
 # System
 #
 
