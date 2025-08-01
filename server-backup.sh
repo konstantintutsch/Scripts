@@ -136,8 +136,8 @@ rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit
 DDCLIENT="ddclient"
 
 downloadlocal "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/${COPY_INIT}"
-downloadlocal "/etc/ddclient-konstantintutsch.de" "${DDCLIENT}"
-downloadlocal "/etc/ddclient-konstantintutsch.com" "${DDCLIENT}"
+downloadlocal "/etc/ddclient-konstantintutsch.de.conf" "${DDCLIENT}"
+downloadlocal "/etc/ddclient-konstantintutsch.com.conf" "${DDCLIENT}"
 
 #
 # System
