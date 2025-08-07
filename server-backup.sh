@@ -128,6 +128,7 @@ downloadlocal "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
 download "$LOCAL" "conduit" "/home/conduit/download.sh" "${LOCAL}/${CONDUIT}/download.sh"
 download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/config.toml"
 rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
+rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/media" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
 
 #
 # DDClient
