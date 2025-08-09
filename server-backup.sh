@@ -74,8 +74,17 @@ download() {
     scp "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$4"
 }
 
-downloadlocal() {
+download_local() {
     download "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
+}
+
+download_directory() {
+    mkdir -p "${BACKUP_DIRECTORY}/$(dirname $4)/directory"
+    rsync --verbose --archive --recursive --delete "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$(dirname $4)/directory"
+}
+
+download_directory_local() {
+    download_directory "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
 }
 
 if [[ ! -d "${BACKUP_DIRECTORY}" ]]
@@ -94,10 +103,10 @@ UMAMI_DB="~/umami.sql"
 # UMAMI_DB_PASSWORD
 
 ssh "konstantin"@"$LOCAL" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
-downloadlocal "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
+download_local "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
 ssh "konstantin"@"$LOCAL" "rm ${UMAMI_DB}"
-downloadlocal "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
-downloadlocal "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
+download_local "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 #
 # Websites
@@ -105,11 +114,11 @@ downloadlocal "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 
 WEBSERVER="httpd"
 
-downloadlocal "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
+download_local "/etc/httpd/conf.d/base.conf" "${WEBSERVER}/base.conf"
 
-downloadlocal "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
-downloadlocal "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
-downloadlocal "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
+download_local "/etc/httpd/conf.d/konstantintutsch.com.conf" "${WEBSERVER}/konstantintutsch.com.conf"
+download_local "/etc/httpd/conf.d/konstantintutsch.de.conf" "${WEBSERVER}/konstantintutsch.de.conf"
+download_local "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 
 #
 # Syncthing
@@ -123,12 +132,12 @@ download "$LOCAL" "syncthing" "/home/syncthing/.local/state/syncthing/config.xml
 
 CONDUIT="conduit"
 
-downloadlocal "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
-downloadlocal "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
+download_local "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
 download "$LOCAL" "conduit" "/home/conduit/download.sh" "${LOCAL}/${CONDUIT}/download.sh"
 download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/config.toml"
-rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/database" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
-rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit/media" "${BACKUP_DIRECTORY}/${LOCAL}/${CONDUIT}/directory"
+download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDUIT}/directory"
+download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}/directory"
 
 #
 # DDClient
@@ -136,9 +145,9 @@ rsync --verbose --archive --recursive --delete "conduit"@"$LOCAL":"/home/conduit
 
 DDCLIENT="ddclient"
 
-downloadlocal "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/${COPY_INIT}"
-downloadlocal "/etc/ddclient-konstantintutsch.de.conf" "${DDCLIENT}"
-downloadlocal "/etc/ddclient-konstantintutsch.com.conf" "${DDCLIENT}"
+download_local "/etc/systemd/system/ddclient@.service" "${DDCLIENT}/${COPY_INIT}"
+download_local "/etc/ddclient-konstantintutsch.de.conf" "${DDCLIENT}"
+download_local "/etc/ddclient-konstantintutsch.com.conf" "${DDCLIENT}"
 
 #
 # System
@@ -147,9 +156,9 @@ downloadlocal "/etc/ddclient-konstantintutsch.com.conf" "${DDCLIENT}"
 DNF="dnf"
 FAIL2BAN="fail2ban"
 
-downloadlocal "~/firewalld.sh" "firewalld.sh"
-downloadlocal "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
-downloadlocal "~/dnfmail.sh" "${DNF}/dnfmail.sh"
+download_local "~/firewalld.sh" "firewalld.sh"
+download_local "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
+download_local "~/dnfmail.sh" "${DNF}/dnfmail.sh"
 
 #
 # Success
