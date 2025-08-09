@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Exit on error
-set -e
+set -eE
 trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occurred at command “${BASH_COMMAND}”'; }" ERR
 
 #
