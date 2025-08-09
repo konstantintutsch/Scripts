@@ -2,7 +2,7 @@
 
 # Exit on error
 set -e
-trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occured.'; }" ERR
+trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occurred.'; }" ERR
 
 #
 # Internal script configuration
