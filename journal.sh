@@ -1,14 +1,62 @@
 #!/bin/bash
 
+help() {
+    echo "Bitte wähle eine Aktion:"
+    for action in ${ACTIONS[@]}
+    do
+        echo "- ${0} ${action}"
+    done
+}
+
+write() {
+    file="${1}"
+    title="${2}"
+    heading="${3}"
+
+    # Day Template
+    if [ ! -f "${file}" ]
+    then
+        cat > "${file}" <<EOF
+# ${title}
+EOF
+    fi
+
+    # Entry Template
+    cat >> "${file}" <<EOF
+
+## ${heading} 
+
+EOF
+
+    # Enter editor
+    if [[ "${EDITOR}" == *"vim" || "${EDITOR}" == *"*nvim" ]]
+    then
+        "${EDITOR}" + "${file}"
+    else
+        "${EDITOR}" "${file}"
+    fi
+}
+
+render() {
+    source_directory="${1}"
+    pdf_path="${2}"
+    title="${3}"
+
+    pandoc "${source_directory}/"*".md" \
+        --output "${pdf_path}" \
+        --metadata title="${title}"
+}
+
 #
-# Purpose
+# Commandline Arguments
 #
+
+ACTIONS=("write" "render")
 
 if [ $# -lt 1 ]
 then
-    PURPOSE=""
-else
-    PURPOSE=" - ${1}"
+    help
+    exit 1
 fi
 
 #
@@ -40,38 +88,35 @@ PDF_DIRECTORY="${BASE_DIRECTORY}"
 mkdir --parent "${PDF_DIRECTORY}"
 
 #
-# Editing
+# Actions
 #
 
-FILE="${SOURCE_DIRECTORY}/${DAY}.md"
+SOURCE_FILE="${SOURCE_DIRECTORY}/${DAY}.md"
 
-# Day Template
-if [ ! -f "${FILE}" ]
-then
-    cat > "${FILE}" <<EOF
-# ${TODAY}
-EOF
-fi
+PDF_FILE="${PDF_DIRECTORY}/${YEAR}-${MONTH}.pdf"
+PDF_TITLE="Journal für ${MONTH_NAME} ${YEAR}"
 
-# Entry Template
-cat >> "${FILE}" <<EOF
+case ${1} in
 
-## ${NOW}${PURPOSE} 
+    "${ACTIONS[0]}")
+        if [ $# -lt 2 ]
+        then
+            PURPOSE=""
+        else
+            PURPOSE=" - ${1}"
+        fi
 
-EOF
+        write "${SOURCE_FILE}" "${TODAY}" "${NOW}${PURPOSE}"
+        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
+        ;;
 
-# Enter editor
-if [[ "${EDITOR}" == *"vim" || "${EDITOR}" == *"*nvim" ]]
-then
-    "${EDITOR}" + "${FILE}"
-else
-    "${EDITOR}" "${FILE}"
-fi
+    "${ACTIONS[1]}")
+        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
+        ;;
 
-#
-# PDF
-#
-
-pandoc "${SOURCE_DIRECTORY}/"*".md" \
-    --output "${PDF_DIRECTORY}/${YEAR}-${MONTH}.pdf" \
-    --metadata title="Journal für ${MONTH_NAME} ${YEAR}"
+    *)
+        echo "Unbekannte Aktion"
+        help
+        exit 1
+        ;;
+esac
