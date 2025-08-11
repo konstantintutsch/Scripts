@@ -115,7 +115,7 @@ case ${1} in
         then
             PURPOSE=""
         else
-            PURPOSE=" - ${1}"
+            PURPOSE=" - ${2}"
         fi
 
         write "${SOURCE_FILE}" "${TODAY}" "${NOW}${PURPOSE}"
