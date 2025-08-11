@@ -47,11 +47,23 @@ render() {
         --metadata title="${title}"
 }
 
+count_words() {
+    pdf_directory="${1}"
+
+    printf "Wörter im Journal: "
+
+    (for pdf in "${pdf_directory}/"*".pdf"
+    do
+        pdftotext "${pdf}" -
+    done) \
+        | wc -w
+}
+
 #
 # Commandline Arguments
 #
 
-ACTIONS=("write" "render")
+ACTIONS=("write" "render" "words")
 
 if [ $# -lt 1 ]
 then
@@ -112,6 +124,10 @@ case ${1} in
 
     "${ACTIONS[1]}")
         render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
+        ;;
+
+    "${ACTIONS[2]}")
+        count_words "${PDF_DIRECTORY}"
         ;;
 
     *)
