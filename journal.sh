@@ -84,7 +84,7 @@ MONTH_NAME="$(date +%B)"
 DAY="$(date +%d)"
 DAY_NAME="$(date +%A)"
 
-TODAY="${DAY_NAME}, ${DAY}. ${MONTH_NAME}"
+TODAY="${DAY_NAME}, ${DAY}. ${MONTH_NAME} ${YEAR}"
 NOW="$(date +%R)"
 
 #
