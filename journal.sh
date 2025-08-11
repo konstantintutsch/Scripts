@@ -44,7 +44,8 @@ render() {
 
     pandoc "${source_directory}/"*".md" \
         --output "${pdf_path}" \
-        --metadata title="${title}"
+        --metadata title="${title}" \
+        --variable pagestyle="empty"
 }
 
 count_words() {
