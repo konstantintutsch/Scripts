@@ -140,6 +140,16 @@ download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDU
 download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}/directory"
 
 #
+# Anki
+#
+
+ANKI="anki"
+
+download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
+download_local "/etc/httpd/conf.d/anki.conf" "${ANKI}/${COPY_WEBSERVER}"
+download_directory "$LOCAL" "anki" "/home/anki/sync" "${LOCAL}/${ANKI}/directory"
+
+#
 # DDClient
 #
 
