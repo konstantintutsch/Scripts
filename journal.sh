@@ -48,6 +48,20 @@ render() {
         --variable pagestyle="empty"
 }
 
+search() {
+    read -p "Suche: " query
+    if [[ -z "${query}" ]]
+    then
+        return 1
+    fi
+
+    grep --recursive --binary-files=without-match \
+        --line-number --with-filename --color=always \
+        "${1}" \
+        --ignore-case --word-regexp --context=1 \
+        --regexp="${query}"
+}
+
 count_words() {
     pdf_directory="${1}"
 
@@ -64,7 +78,7 @@ count_words() {
 # Commandline Arguments
 #
 
-ACTIONS=("write" "render" "words")
+ACTIONS=("write" "render" "search" "words")
 
 if [ $# -lt 1 ]
 then
@@ -128,6 +142,10 @@ case ${1} in
         ;;
 
     "${ACTIONS[2]}")
+        search "${BASE_DIRECTORY}"
+        ;;
+
+    "${ACTIONS[3]}")
         count_words "${PDF_DIRECTORY}"
         ;;
 
