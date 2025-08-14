@@ -58,7 +58,7 @@ search() {
     grep --recursive --binary-files=without-match \
         --line-number --with-filename --color=always \
         "${1}" \
-        --ignore-case --word-regexp --context=1 \
+        --ignore-case --context=1 \
         --regexp="${query}"
 }
 
