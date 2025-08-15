@@ -20,7 +20,8 @@ BACKUP_DIRECTORY="${HOME}/Hosting" # The backup location
 # Copy names
 COPY_INIT="systemd.service"
 COPY_WEBSERVER="httpd.conf"
-COPY_DATABASE="mariadb.sql"
+COPY_DATABASE="postgres.sql"
+COPY_DOCKER="docker-compose.yaml"
 
 # External configuration file - add / overwrite shell variables - used for database credentials
 EXTERNAL_CONFIG="${HOME}/Code/Scripts/.server-backup.conf" # .gitignore -> avoid db credential leak
@@ -75,7 +76,13 @@ download() {
 }
 
 download_local() {
-    download "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
+    USER="${3}"
+    if [[ -z ${USER} ]]
+    then
+        USER="konstantin"
+    fi
+
+    download "$LOCAL" "${USER}" "$1" "${LOCAL}/$2"
 }
 
 download_directory() {
@@ -98,15 +105,13 @@ fi
 
 UMAMI="umami"
 UMAMI_DB="~/umami.sql"
-# UMAMI_DB_NAME
-# UMAMI_DB_USER
-# UMAMI_DB_PASSWORD
 
-ssh "konstantin"@"$LOCAL" "mariadb-dump -u${UMAMI_DB_USER} -p${UMAMI_DB_PASSWORD} ${UMAMI_DB_NAME} > ${UMAMI_DB}"
+ssh "konstantin"@"$LOCAL" "docker exec umami-db-1 pg_dump -U ${UMAMI} -d ${UMAMI} > ${UMAMI_DB}"
 download_local "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
 ssh "konstantin"@"$LOCAL" "rm ${UMAMI_DB}"
 download_local "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
+download_local "/home/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}" "umami"
 
 #
 # Websites
@@ -134,8 +139,8 @@ CONDUIT="conduit"
 
 download_local "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
 download_local "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
-download "$LOCAL" "conduit" "/home/conduit/download.sh" "${LOCAL}/${CONDUIT}/download.sh"
-download "$LOCAL" "conduit" "/home/conduit/config.toml" "${LOCAL}/${CONDUIT}/config.toml"
+download_local "/home/conduit/download.sh" "${CONDUIT}/download.sh" "conduit"
+download_local "/home/conduit/config.toml" "${CONDUIT}/config.toml" "conduit"
 download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDUIT}/directory"
 download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}/directory"
 
