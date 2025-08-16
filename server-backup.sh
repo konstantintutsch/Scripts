@@ -23,20 +23,6 @@ COPY_WEBSERVER="httpd.conf"
 COPY_DATABASE="postgres.sql"
 COPY_DOCKER="docker-compose.yaml"
 
-# External configuration file - add / overwrite shell variables - used for database credentials
-EXTERNAL_CONFIG="${HOME}/Code/Scripts/.server-backup.conf" # .gitignore -> avoid db credential leak
-
-if [[ ${EXTERNAL_CONFIG} == "" || -z ${EXTERNAL_CONFIG} ]]
-then
-    echo "Please create a configuration based on templates/server-backup.conf and set EXTERNAL_CONFIG in server-backup.sh to the configuration file's path before runnig this script."
-    exit 1
-else
-    for line in $(cat ${EXTERNAL_CONFIG})
-    do
-        eval "export ${line}"
-    done
-fi
-
 if [[ "$1" != "force" ]]
 then
     SAVE="${HOME}/.server-backup-done"
@@ -86,8 +72,8 @@ download_local() {
 }
 
 download_directory() {
-    mkdir -p "${BACKUP_DIRECTORY}/$(dirname $4)/directory"
-    rsync --verbose --archive --recursive --delete "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$(dirname $4)/directory"
+    mkdir -p "${BACKUP_DIRECTORY}/${4}"
+    rsync --verbose --archive --recursive --delete "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/${4}"
 }
 
 download_directory_local() {
@@ -123,7 +109,7 @@ ENDURAIN_DB="~/endurain.sql"
 ssh "konstantin"@"$LOCAL" "docker exec endurain-postgres pg_dump -U ${ENDURAIN} -d ${ENDURAIN} > ${ENDURAIN_DB}"
 download_local "${ENDURAIN_DB}" "${ENDURAIN}/${COPY_DATABASE}"
 ssh "konstantin"@"$LOCAL" "rm ${ENDURAIN_DB}"
-download_directory_local "/opt/endurain/backend" "${ENDURAIN}/directory"
+download_directory_local "/opt/endurain/backend" "${ENDURAIN}"
 download_local "/etc/httpd/conf.d/endurain.conf" "${ENDURAIN}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/endurain.service" "${ENDURAIN}/${COPY_INIT}"
 download_local "/opt/endurain/docker-compose.yaml" "${ENDURAIN}/${COPY_DOCKER}"
@@ -157,8 +143,8 @@ download_local "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
 download_local "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
 download_local "/home/conduit/download.sh" "${CONDUIT}/download.sh" "conduit"
 download_local "/home/conduit/config.toml" "${CONDUIT}/config.toml" "conduit"
-download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDUIT}/directory"
-download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}/directory"
+download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDUIT}"
+download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}"
 
 #
 # Anki
@@ -168,7 +154,7 @@ ANKI="anki"
 
 download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
 download_local "/etc/httpd/conf.d/anki.conf" "${ANKI}/${COPY_WEBSERVER}"
-download_directory "$LOCAL" "anki" "/home/anki/sync" "${LOCAL}/${ANKI}/directory"
+download_directory "$LOCAL" "anki" "/home/anki/sync" "${LOCAL}/${ANKI}"
 
 #
 # DDClient
