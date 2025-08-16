@@ -8,13 +8,10 @@ trap "{ notify-send --urgency=critical '🔴 Server Backup Failed' 'An error occ
 # Internal script configuration
 #
 
-DATE="$(date +%Y%m%d)"
-
 LOCAL="notolaf" # The server to connect to
 ADDRESS_SPACE="192.168.178." # The server's network address space - if SSH is only possible from within this network
 
 # Locations
-DATA_DIRECTORY_LOCAL="/mnt/storage"
 BACKUP_DIRECTORY="${HOME}/Hosting" # The backup location
 
 # Copy names
@@ -190,9 +187,12 @@ download_local "/opt/conduit/docker-compose.yaml" "${CONDUIT}/${COPY_DOCKER}"
 
 ANKI="anki"
 
-download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
+run_local "docker stop anki"
+download_directory_local "/opt/anki/sync" "${ANKI}"
+run_local "docker start anki"
 download_local "/etc/httpd/conf.d/anki.conf" "${ANKI}/${COPY_WEBSERVER}"
-download_directory "$LOCAL" "anki" "/home/anki/sync" "${LOCAL}/${ANKI}"
+download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
+download_local "/opt/anki/docker-compose.yaml" "${ANKI}/${COPY_DOCKER}"
 
 #
 # DDClient
