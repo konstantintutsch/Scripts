@@ -177,12 +177,12 @@ download "$LOCAL" "syncthing" "/home/syncthing/.local/state/syncthing/config.xml
 
 CONDUIT="conduit"
 
-download_local "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
+run_local "docker stop conduit"
+download_directory_local "/opt/conduit/database" "${CONDUIT}"
+run_local "docker start conduit"
 download_local "/etc/httpd/conf.d/conduit.conf" "${CONDUIT}/${COPY_WEBSERVER}"
-download_local "/home/conduit/download.sh" "${CONDUIT}/download.sh" "conduit"
-download_local "/home/conduit/config.toml" "${CONDUIT}/config.toml" "conduit"
-download_directory "$LOCAL" "conduit" "/home/conduit/database" "${LOCAL}/${CONDUIT}"
-download_directory "$LOCAL" "conduit" "/home/conduit/media" "${LOCAL}/${CONDUIT}"
+download_local "/etc/systemd/system/conduit.service" "${CONDUIT}/${COPY_INIT}"
+download_local "/opt/conduit/docker-compose.yaml" "${CONDUIT}/${COPY_DOCKER}"
 
 #
 # Anki
