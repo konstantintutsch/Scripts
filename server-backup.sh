@@ -106,12 +106,12 @@ fi
 UMAMI="umami"
 UMAMI_DB="~/umami.sql"
 
-ssh "konstantin"@"$LOCAL" "docker exec umami-db-1 pg_dump -U ${UMAMI} -d ${UMAMI} > ${UMAMI_DB}"
+ssh "konstantin"@"$LOCAL" "docker exec umami-db pg_dump -U ${UMAMI} -d ${UMAMI} > ${UMAMI_DB}"
 download_local "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
 ssh "konstantin"@"$LOCAL" "rm ${UMAMI_DB}"
 download_local "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
-download_local "/home/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}" "umami"
+download_local "/opt/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}"
 
 #
 # Endurain
