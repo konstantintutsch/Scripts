@@ -57,7 +57,15 @@ done
 echo "Connected!"
 
 run() {
-    ssh "${2}"@"${1}" "${3}" 
+    user="${2}"
+    host="${1}"
+    command="${3}"
+
+    echo "Running command on ${user}@${host}: ${command}"
+
+    ssh "${user}"@"${host}" "${command}" 
+
+    echo ""
 }
 
 run_local() {
@@ -65,8 +73,17 @@ run_local() {
 }
 
 download() {
-    mkdir -p "${BACKUP_DIRECTORY}/$(dirname $4)"
-    scp "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$4"
+    user="${2}"
+    host="${1}"
+    source="${3}"
+    target="${BACKUP_DIRECTORY}/${4}"
+
+    echo "Downloading file ${user}@${host}:${source} to ${target}"
+
+    mkdir -p "$(dirname ${target})"
+    scp "${user}"@"${host}":"${source}" "${target}"
+
+    echo ""
 }
 
 download_local() {
@@ -80,8 +97,17 @@ download_local() {
 }
 
 download_directory() {
-    mkdir -p "${BACKUP_DIRECTORY}/${4}"
-    rsync --verbose --archive --recursive --delete "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/${4}"
+    user="${2}"
+    host="${1}"
+    source="${3}"
+    target="${BACKUP_DIRECTORY}/${4}"
+
+    echo "Downloading directory ${user}@${host}:${source} to ${target}"
+
+    mkdir -p "${target}"
+    rsync --verbose --archive --recursive --delete "${user}"@"${host}":"${source}" "${target}"
+
+    echo ""
 }
 
 download_directory_local() {
