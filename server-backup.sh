@@ -114,6 +114,22 @@ download_local "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 download_local "/home/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}" "umami"
 
 #
+# Endurain
+#
+
+ENDURAIN="endurain"
+ENDURAIN_DB="~/endurain.sql"
+
+ssh "konstantin"@"$LOCAL" "docker exec endurain-postgres pg_dump -U ${ENDURAIN} -d ${ENDURAIN} > ${ENDURAIN_DB}"
+download_local "${ENDURAIN_DB}" "${ENDURAIN}/${COPY_DATABASE}"
+ssh "konstantin"@"$LOCAL" "rm ${ENDURAIN_DB}"
+download_directory_local "/opt/endurain/backend" "${ENDURAIN}/directory"
+download_local "/etc/httpd/conf.d/endurain.conf" "${ENDURAIN}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/endurain.service" "${ENDURAIN}/${COPY_INIT}"
+download_local "/opt/endurain/docker-compose.yaml" "${ENDURAIN}/${COPY_DOCKER}"
+
+
+#
 # Websites
 #
 
