@@ -166,7 +166,13 @@ download_local "/etc/httpd/conf.d/apps.conf" "${WEBSERVER}/apps.conf"
 # Syncthing
 #
 
-download "$LOCAL" "syncthing" "/home/syncthing/.local/state/syncthing/config.xml" "${LOCAL}/syncthing.xml"
+SYNCTHING="syncthing"
+
+run_local "docker stop syncthing"
+download_local "/opt/syncthing/data/config/config.xml" "${SYNCTHING}/config.xml"
+run_local "docker start syncthing"
+download_local "/etc/systemd/system/syncthing.service" "${SYNCTHING}/${COPY_INIT}"
+download_local "/opt/syncthing/docker-compose.yaml" "${SYNCTHING}/${COPY_DOCKER}"
 
 #
 # Conduit
