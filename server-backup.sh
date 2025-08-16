@@ -56,6 +56,14 @@ do
 done
 echo "Connected!"
 
+run() {
+    ssh "${2}"@"${1}" "${3}" 
+}
+
+run_local() {
+    run "${LOCAL}" "konstantin" "${1}" 
+}
+
 download() {
     mkdir -p "${BACKUP_DIRECTORY}/$(dirname $4)"
     scp "$2"@"$1":"$3" "${BACKUP_DIRECTORY}/$4"
@@ -68,7 +76,7 @@ download_local() {
         USER="konstantin"
     fi
 
-    download "$LOCAL" "${USER}" "$1" "${LOCAL}/$2"
+    download "${LOCAL}" "${USER}" "$1" "${LOCAL}/$2"
 }
 
 download_directory() {
@@ -77,7 +85,7 @@ download_directory() {
 }
 
 download_directory_local() {
-    download_directory "$LOCAL" "konstantin" "$1" "${LOCAL}/$2"
+    download_directory "${LOCAL}" "konstantin" "$1" "${LOCAL}/$2"
 }
 
 if [[ ! -d "${BACKUP_DIRECTORY}" ]]
@@ -92,9 +100,11 @@ fi
 UMAMI="umami"
 UMAMI_DB="~/umami.sql"
 
-ssh "konstantin"@"$LOCAL" "docker exec umami-db pg_dump -U ${UMAMI} -d ${UMAMI} > ${UMAMI_DB}"
+run_local "docker stop umami-app"
+run_local "docker exec umami-db pg_dump -U ${UMAMI} -d ${UMAMI} > ${UMAMI_DB}"
+run_local "docker start umami-app"
 download_local "${UMAMI_DB}" "${UMAMI}/${COPY_DATABASE}"
-ssh "konstantin"@"$LOCAL" "rm ${UMAMI_DB}"
+run_local "rm ${UMAMI_DB}"
 download_local "/etc/httpd/conf.d/umami.conf" "${UMAMI}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/umami.service" "${UMAMI}/${COPY_INIT}"
 download_local "/opt/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}"
@@ -106,9 +116,11 @@ download_local "/opt/umami/docker-compose.yaml" "${UMAMI}/${COPY_DOCKER}"
 ENDURAIN="endurain"
 ENDURAIN_DB="~/endurain.sql"
 
-ssh "konstantin"@"$LOCAL" "docker exec endurain-postgres pg_dump -U ${ENDURAIN} -d ${ENDURAIN} > ${ENDURAIN_DB}"
+run_local "docker stop endurain-app"
+run_local "docker exec endurain-postgres pg_dump -U ${ENDURAIN} -d ${ENDURAIN} > ${ENDURAIN_DB}"
+run_local "docker start endurain-app"
 download_local "${ENDURAIN_DB}" "${ENDURAIN}/${COPY_DATABASE}"
-ssh "konstantin"@"$LOCAL" "rm ${ENDURAIN_DB}"
+run_local "rm ${ENDURAIN_DB}"
 download_directory_local "/opt/endurain/backend" "${ENDURAIN}"
 download_local "/etc/httpd/conf.d/endurain.conf" "${ENDURAIN}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/endurain.service" "${ENDURAIN}/${COPY_INIT}"
