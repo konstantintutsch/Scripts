@@ -201,6 +201,20 @@ download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
 download_local "/opt/anki/docker-compose.yaml" "${ANKI}/${COPY_DOCKER}"
 
 #
+# Silverbullet
+#
+
+SILVERBULLET="silverbullet"
+
+run_local "docker stop silverbullet"
+download_directory_local "/opt/silverbullet/space" "${SILVERBULLET}"
+run_local "docker start anki"
+download_local "/etc/httpd/conf.d/silverbullet.conf" "${SILVERBULLET}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/silverbullet.service" "${SILVERBULLET}/${COPY_INIT}"
+download_local "/opt/silverbullet/docker-compose.yaml" "${SILVERBULLET}/${COPY_DOCKER}"
+
+
+#
 # DDClient
 #
 
