@@ -47,7 +47,7 @@ render() {
     pdf_path="${2}"
     title="${3}"
 
-    pandoc "${source_directory}/"*".md" \
+    pandoc $(ls --reverse ${source_directory}/*.md) \
         --output "${pdf_path}" \
         --metadata title="${title}" \
         --variable pagestyle="empty"
