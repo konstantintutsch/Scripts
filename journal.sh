@@ -9,9 +9,12 @@ help() {
 }
 
 write() {
-    file="${1}"
-    title="${2}"
-    heading="${3}"
+    current_directory="$(pwd)"
+    working_directory="${1}"
+
+    file="${2}"
+    title="${3}"
+    heading="${4}"
 
     # Day Template
     if [ ! -f "${file}" ]
@@ -31,7 +34,9 @@ EOF
     # Enter editor
     if [[ "${EDITOR}" == *"vim" || "${EDITOR}" == *"*nvim" ]]
     then
+        cd "${working_directory}" || echo "Arbeitsverzeichnis konnte nicht betreten werden"
         "${EDITOR}" + "${file}"
+        cd "${current_directory}" || echo "Arbeitsverzeichnis konnte nicht verlassen werden"
     else
         "${EDITOR}" "${file}"
     fi
@@ -63,13 +68,13 @@ search() {
 }
 
 count_words() {
-    pdf_directory="${1}"
+    source_directory="${1}"
 
     printf "Wörter im Journal: "
 
-    (for pdf in "${pdf_directory}/"*".pdf"
+    (for entry in "${source_directory}/"*".md"
     do
-        pdftotext "${pdf}" -
+        cat "${entry}"
     done) \
         | wc -w
 }
@@ -91,37 +96,32 @@ fi
 #
 
 YEAR="$(date +%Y)"
-
 MONTH="$(date +%m)"
-MONTH_NAME="$(date +%B)"
-
 DAY="$(date +%d)"
-DAY_NAME="$(date +%A)"
 
-TODAY="${DAY_NAME}, ${DAY}. ${MONTH_NAME} ${YEAR}"
 NOW="$(date +%R)"
 
 #
 # Directories
 #
 
-BASE_DIRECTORY="$(xdg-user-dir DOCUMENTS)/Journal"
+BASE_DIRECTORY="$(xdg-user-dir DOCUMENTS)/Notizen"
 mkdir --parent "${BASE_DIRECTORY}"
 
-SOURCE_DIRECTORY="${BASE_DIRECTORY}/${YEAR}/${MONTH}"
+SOURCE_DIRECTORY="${BASE_DIRECTORY}/Journal"
 mkdir --parent "${SOURCE_DIRECTORY}"
 
-PDF_DIRECTORY="${BASE_DIRECTORY}/PDF"
+PDF_DIRECTORY="${SOURCE_DIRECTORY}/PDF"
 mkdir --parent "${PDF_DIRECTORY}"
 
 #
 # Actions
 #
 
-SOURCE_FILE="${SOURCE_DIRECTORY}/${DAY}.md"
+SOURCE_FILE="${SOURCE_DIRECTORY}/${YEAR}-${MONTH}-${DAY}.md"
 
-PDF_FILE="${PDF_DIRECTORY}/${YEAR}-${MONTH}.pdf"
-PDF_TITLE="Journal für ${MONTH_NAME} ${YEAR}"
+PDF_FILE="${PDF_DIRECTORY}/Journal.pdf"
+PDF_TITLE="Journal"
 
 case ${1} in
 
@@ -133,7 +133,7 @@ case ${1} in
             PURPOSE=" - ${2}"
         fi
 
-        write "${SOURCE_FILE}" "${TODAY}" "${NOW}${PURPOSE}"
+        write "${BASE_DIRECTORY}" "${SOURCE_FILE}" "${YEAR}-${MONTH}-${DAY}" "${NOW}${PURPOSE}"
         render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
         ;;
 
@@ -146,7 +146,7 @@ case ${1} in
         ;;
 
     "${ACTIONS[3]}")
-        count_words "${PDF_DIRECTORY}"
+        count_words "${SOURCE_DIRECTORY}"
         ;;
 
     *)
