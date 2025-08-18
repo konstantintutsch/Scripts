@@ -20,7 +20,7 @@ write() {
     if [ ! -f "${file}" ]
     then
         cat > "${file}" <<EOF
-# ${title}
+# 💭 Journal - ${title}
 EOF
     fi
 
@@ -40,17 +40,6 @@ EOF
     else
         "${EDITOR}" "${file}"
     fi
-}
-
-render() {
-    source_directory="${1}"
-    pdf_path="${2}"
-    title="${3}"
-
-    pandoc $(ls --reverse ${source_directory}/*.md) \
-        --output "${pdf_path}" \
-        --metadata title="${title}" \
-        --variable pagestyle="empty"
 }
 
 search() {
@@ -83,7 +72,7 @@ count_words() {
 # Commandline Arguments
 #
 
-ACTIONS=("write" "render" "search" "words")
+ACTIONS=("write" "search" "words")
 
 if [ $# -lt 1 ]
 then
@@ -138,14 +127,10 @@ case ${1} in
         ;;
 
     "${ACTIONS[1]}")
-        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
-        ;;
-
-    "${ACTIONS[2]}")
         search "${BASE_DIRECTORY}"
         ;;
 
-    "${ACTIONS[3]}")
+    "${ACTIONS[2]}")
         count_words "${SOURCE_DIRECTORY}"
         ;;
 

@@ -10,7 +10,7 @@ write() {
     if [ ! -f "${file}" ]
     then
         cat > "${file}" <<EOF
-# ${title}
+# 🌱 Log - ${title}
 
 - 
 EOF
