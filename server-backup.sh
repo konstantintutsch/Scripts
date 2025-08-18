@@ -213,6 +213,18 @@ download_local "/etc/httpd/conf.d/silverbullet.conf" "${SILVERBULLET}/${COPY_WEB
 download_local "/etc/systemd/system/silverbullet.service" "${SILVERBULLET}/${COPY_INIT}"
 download_local "/opt/silverbullet/docker-compose.yaml" "${SILVERBULLET}/${COPY_DOCKER}"
 
+#
+# Uptime Kuma
+#
+
+UPTIMEKUMA="uptime-kuma"
+
+run_local "docker stop uptime-kuma"
+download_directory_local "/opt/uptime-kuma/data" "${UPTIMEKUMA}"
+run_local "docker start uptime-kuma"
+download_local "/etc/httpd/conf.d/uptime-kuma.conf" "${UPTIMEKUMA}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/uptime-kuma.service" "${UPTIMEKUMA}/${COPY_INIT}"
+download_local "/opt/uptime-kuma/docker-compose.yaml" "${UPTIMEKUMA}/${COPY_DOCKER}"
 
 #
 # DDClient
