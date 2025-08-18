@@ -123,7 +123,6 @@ case ${1} in
         fi
 
         write "${BASE_DIRECTORY}" "${SOURCE_FILE}" "${YEAR}-${MONTH}-${DAY}" "${NOW}${PURPOSE}"
-        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
         ;;
 
     "${ACTIONS[1]}")
