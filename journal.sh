@@ -20,7 +20,7 @@ write() {
     if [ ! -f "${file}" ]
     then
         cat > "${file}" <<EOF
-# 💭 Journal - ${title}
+# ${title}
 EOF
     fi
 
@@ -107,10 +107,8 @@ mkdir --parent "${PDF_DIRECTORY}"
 # Actions
 #
 
-SOURCE_FILE="${SOURCE_DIRECTORY}/${YEAR}-${MONTH}-${DAY}.md"
-
-PDF_FILE="${PDF_DIRECTORY}/Journal.pdf"
-PDF_TITLE="Journal"
+SOURCE_TITLE="${YEAR}-${MONTH}-${DAY}"
+SOURCE_FILE="${SOURCE_DIRECTORY}/${SOURCE_TITLE}.md"
 
 case ${1} in
 
@@ -122,7 +120,7 @@ case ${1} in
             PURPOSE=" - ${2}"
         fi
 
-        write "${BASE_DIRECTORY}" "${SOURCE_FILE}" "${YEAR}-${MONTH}-${DAY}" "${NOW}${PURPOSE}"
+        write "${BASE_DIRECTORY}" "${SOURCE_FILE}" "${SOURCE_TITLE}" "${NOW}${PURPOSE}"
         ;;
 
     "${ACTIONS[1]}")
