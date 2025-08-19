@@ -142,7 +142,7 @@ case ${1} in
         ;;
 
     "${ACTIONS[2]}")
-        count_words "${SOURCE_DIRECTORY}"
+        words "${SOURCE_DIRECTORY}"
         ;;
 
     "${ACTIONS[3]}")
