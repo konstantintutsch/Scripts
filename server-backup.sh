@@ -201,6 +201,20 @@ download_local "/etc/systemd/system/anki.service" "${ANKI}/${COPY_INIT}"
 download_local "/opt/anki/docker-compose.yaml" "${ANKI}/${COPY_DOCKER}"
 
 #
+# Beaver Habit Tracker
+#
+
+BEAVERHABITS="beaverhabits"
+
+run_local "docker stop beaverhabits"
+download_directory_local "/opt/beaverhabits/data" "${BEAVERHABITS}"
+run_local "docker start beaverhabits"
+download_local "/etc/httpd/conf.d/beaverhabits.conf" "${BEAVERHABITS}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/beaverhabits.service" "${BEAVERHABITS}/${COPY_INIT}"
+download_local "/opt/beaverhabits/docker-compose.yaml" "${BEAVERHABITS}/${COPY_DOCKER}"
+
+
+#
 # Uptime Kuma
 #
 
