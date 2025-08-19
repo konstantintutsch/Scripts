@@ -56,7 +56,7 @@ search() {
         --regexp="${query}"
 }
 
-count_words() {
+words() {
     source_directory="${1}"
 
     printf "Wörter im Journal: "
@@ -68,11 +68,21 @@ count_words() {
         | wc -w
 }
 
+render() {
+    source_directory="${1}"
+    pdf_path="${2}"
+    title="${3}"
+
+    pandoc $(ls --reverse ${source_directory}/*.md) \
+        --output "${pdf_path}" \
+        --metadata title="${title}"
+}
+
 #
 # Commandline Arguments
 #
 
-ACTIONS=("write" "search" "words")
+ACTIONS=("write" "search" "words" "render")
 
 if [ $# -lt 1 ]
 then
@@ -110,6 +120,9 @@ mkdir --parent "${PDF_DIRECTORY}"
 SOURCE_TITLE="${YEAR}-${MONTH}-${DAY}"
 SOURCE_FILE="${SOURCE_DIRECTORY}/${SOURCE_TITLE}.md"
 
+PDF_TITLE="Journal"
+PDF_FILE="${PDF_DIRECTORY}/Journal.pdf"
+
 case ${1} in
 
     "${ACTIONS[0]}")
@@ -121,6 +134,7 @@ case ${1} in
         fi
 
         write "${BASE_DIRECTORY}" "${SOURCE_FILE}" "${SOURCE_TITLE}" "${NOW}${PURPOSE}"
+        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
         ;;
 
     "${ACTIONS[1]}")
@@ -129,6 +143,10 @@ case ${1} in
 
     "${ACTIONS[2]}")
         count_words "${SOURCE_DIRECTORY}"
+        ;;
+
+    "${ACTIONS[3]}")
+        render "${SOURCE_DIRECTORY}" "${PDF_FILE}" "${PDF_TITLE}"
         ;;
 
     *)
