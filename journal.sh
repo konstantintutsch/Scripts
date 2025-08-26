@@ -94,9 +94,14 @@ fi
 # Dates
 #
 
-YEAR="$(date +%Y)"
-MONTH="$(date +%m)"
-DAY="$(date +%d)"
+when="today"
+if [[ $(date +%H) -lt 3 ]]
+then
+    when="yesterday"
+fi
+YEAR=$(date --date="${when}" +%Y)
+MONTH=$(date --date="${when}" +%m)
+DAY=$(date --date="${when}" +%d)
 
 NOW="$(date +%R)"
 
