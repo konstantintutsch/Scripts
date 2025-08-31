@@ -61,11 +61,12 @@ words() {
 
     printf "Wörter im Journal: "
 
-    (for entry in "${source_directory}/"*".md"
-    do
-        cat "${entry}"
-    done) \
-        | wc -w
+    printf "%'d\n" \
+    "$((for entry in "${source_directory}/"*".md"
+        do
+            cat "${entry}"
+        done) \
+            | wc -w)"
 }
 
 render() {
