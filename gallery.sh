@@ -43,6 +43,10 @@ import() {
     file="${1}"
     target="${2}/$(basename "${file}")"
 
+    if [ ! -d "${2}" ]
+    then
+        mkdir --parent "${2}"
+    fi
     mv "${file}" "${target}"
 
     filesystem_time "${target}"
