@@ -15,7 +15,7 @@ time_key() {
     file_extension=$(echo "${file##*.}" | tr '[:upper:]' '[:lower:]')
 
     key="DateTimeOriginal"
-    if [ "${file_extension}" = "mp4" ] || [ "${file_extension}" = "mov" ]
+    if [ "${file_extension}" = "mp4" ] || [ "${file_extension}" = "mov" ] || [ "${file_extension}" == "m4v" ]
     then
         key="CreateDate"
     fi
