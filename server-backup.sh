@@ -116,6 +116,10 @@ then
     mkdir -p "${BACKUP_DIRECTORY}"
 fi
 
+## Do not track downtime
+run_local "docker stop uptime-kuma"
+##
+
 #
 # Umami
 #
@@ -220,9 +224,7 @@ download_local "/opt/beaverhabits/docker-compose.yaml" "${BEAVERHABITS}/${COPY_D
 
 UPTIMEKUMA="uptime-kuma"
 
-run_local "docker stop uptime-kuma"
 download_directory_local "/opt/uptime-kuma/data" "${UPTIMEKUMA}"
-run_local "docker start uptime-kuma"
 download_local "/etc/httpd/conf.d/uptime-kuma.conf" "${UPTIMEKUMA}/${COPY_WEBSERVER}"
 download_local "/etc/systemd/system/uptime-kuma.service" "${UPTIMEKUMA}/${COPY_INIT}"
 download_local "/opt/uptime-kuma/docker-compose.yaml" "${UPTIMEKUMA}/${COPY_DOCKER}"
@@ -247,6 +249,10 @@ FAIL2BAN="fail2ban"
 download_local "~/firewalld.sh" "firewalld.sh"
 download_local "/etc/dnf/automatic.conf" "${DNF}/automatic.conf"
 download_local "~/dnfmail.sh" "${DNF}/dnfmail.sh"
+
+## Do not track downtime
+run_local "docker start uptime-kuma"
+##
 
 #
 # Success
