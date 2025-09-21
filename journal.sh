@@ -96,7 +96,7 @@ fi
 #
 
 when="today"
-if [[ $(date +%H) -lt 3 ]]
+if [[ $(date +%-H) -lt 3 ]]
 then
     when="yesterday"
 fi
