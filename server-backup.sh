@@ -230,6 +230,16 @@ download_local "/etc/systemd/system/uptime-kuma.service" "${UPTIMEKUMA}/${COPY_I
 download_local "/opt/uptime-kuma/docker-compose.yaml" "${UPTIMEKUMA}/${COPY_DOCKER}"
 
 #
+# Ollama
+#
+
+OLLAMA="ollama"
+
+download_local "/etc/httpd/conf.d/ollama.conf" "${OLLAMA}/${COPY_WEBSERVER}"
+download_local "/etc/systemd/system/ollama.service" "${OLLAMA}/${COPY_INIT}"
+download_local "/opt/ollama/docker-compose.yaml" "${OLLAMA}/${COPY_DOCKER}"
+
+#
 # DDClient
 #
 
