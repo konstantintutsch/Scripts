@@ -14,10 +14,6 @@ then
 	exec screen -L -Logfile "$LOGFILE" -S backup /bin/bash "$0"
 fi
 
-# Exit on error
-set -eE
-trap "{ echo 'An error occurred at command “${BASH_COMMAND}”'; }" ERR
-
 if [ ! "${1}" ]
 then
 	read -p "Target [disk/cloud]: " target
