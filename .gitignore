@@ -1,2 +1,3 @@
 firewalld.sh
 .server-backup.conf
+.DS_Store
