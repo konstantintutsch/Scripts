@@ -1,6 +1,6 @@
 #1/bin/bash
 
-GPG_EXP_DIR="${HOME}/Documents/Software/GPG"
+TARGET_DIRECTORY="${HOME}/Downloads"
 
 if [[ -z "${1}" ]]
 then
@@ -8,6 +8,5 @@ then
     exit
 fi
 
-gpg --output "${GPG_EXP_DIR}/public.asc" --armor --export "${1}"
-gpg --output "${GPG_EXP_DIR}/secret.asc" --armor --export-secret-key "${1}"
-
+gpg --output "${TARGET_DIRECTORY}/${1}-public.pgp" --export "${1}"
+gpg --output "${TARGET_DIRECTORY}/${1}-secret.pgp" --export-secret-key "${1}"
