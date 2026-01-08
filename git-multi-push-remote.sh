@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/bin/zsh
 
 REMOTE="all"
 
-read -p "Primary Remote: " primary
+read "primary?Primary Remote: "
 if [ -z "$primary" ]; then exit 1; fi
 
-read -p "Secondary Remote: " secondary
+read "secondary?Secondary Remote: "
 if [ -z "$secondary" ]; then exit 1; fi
 
 # Add remote with multiple push URLs (https://konstantintutsch.com/blog/multiple-push-urls-single-git-remote/)

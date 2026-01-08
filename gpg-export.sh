@@ -1,4 +1,4 @@
-#1/bin/bash
+#!/bin/zsh
 
 TARGET_DIRECTORY="${HOME}/Downloads"
 
