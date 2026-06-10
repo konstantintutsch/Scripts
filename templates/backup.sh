@@ -89,3 +89,5 @@ then
 	# Unmount backup storage
 	fusermount -u "${MOUNT_DIRECTORY}"
 fi
+
+./mail.sh "Backup completed" < backup.log
