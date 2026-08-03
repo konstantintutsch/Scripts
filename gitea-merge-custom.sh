@@ -14,4 +14,4 @@ git fetch "${REMOTE}" "${source_branch}"
 git pull --ff-only "${REMOTE}" "${source_branch}"
 
 git checkout --quiet "${target_branch}"
-git merge --signoff -m "merge: ${source_branch} (#${pr})" "${REMOTE}/${source_branch}"
+git merge --signoff --no-ff -m "merge: ${source_branch} (#${pr})" "${REMOTE}/${source_branch}"
