@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-SERVER="git@konstantintutsch.com"
+SERVER="git@notolaf.konstantintutsch.com"
 
 # get repositories (including all depths)
 REPOSITORIES=$(

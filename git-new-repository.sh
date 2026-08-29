@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-SERVER="git@konstantintutsch.com"
+SERVER="git@notolaf.konstantintutsch.com"
 
 read "name?Name: "
 if [ ! "${name}" ]; then exit 1; fi
