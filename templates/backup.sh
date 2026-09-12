@@ -52,10 +52,13 @@ fi
 # Create backup
 export BORG_REPO="${MOUNT_DIRECTORY}/borg"
 
-read -s -p "Passphrase: " passphrase
-if [ $passphrase ]
+if [[ -z $BORG_PASSPHRASE ]]
 then
-	export BORG_PASSPHRASE=$passphrase
+    read -s -p "Passphrase: " passphrase
+    if [ $passphrase ]
+    then
+        export BORG_PASSPHRASE=$passphrase
+    fi
 fi
 
 borg create --verbose \
