@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Prepare cloud run on Hetzner Storage Boxes:
+# ssh-keygen -t ed25519 -C "$(hostname)" -N ""
+# ssh-copy-id -p 23 -s <user>@<box>
+
 LOGFILE="backup.log"
 
 # Clean up logfile
