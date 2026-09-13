@@ -5,7 +5,7 @@
 # ssh-copy-id -p 23 -s <user>@<box>
 
 # Run cloud backup in cron at 00h00:
-# 0 0 * * * cd <work dir> && BORG_PASSPHRASE=$(cat ./backup_secret) ./backup.sh cloud
+# 0 0 * * * cd <work dir> && BORG_PASSPHRASE=$(cat ./backup_secret) REPORT_URL="<Uptime Kuma Push URL>" ./backup.sh cloud
 
 LOGFILE="backup.log"
 
@@ -100,4 +100,9 @@ then
 	fusermount -u "${MOUNT_DIRECTORY}"
 fi
 
-./mail.sh "Backup completed" < backup.log
+if [[ -z $REPORT_URL ]]
+then
+    ./mail.sh "Backup completed" < backup.log
+elif
+    curl -s "${REPORT_URL}"
+fi
