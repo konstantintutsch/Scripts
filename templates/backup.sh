@@ -110,6 +110,6 @@ fi
 if [[ -z $REPORT_URL ]]
 then
     ./mail.sh "Backup completed" < "$LOGFILE"
-elif
+else
     curl -s "${REPORT_URL}"
 fi
