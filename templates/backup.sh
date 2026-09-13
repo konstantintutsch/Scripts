@@ -9,6 +9,12 @@
 
 LOGFILE="backup.log"
 
+CLOUD_SERVER="<server>"
+CLOUD_USER="<user>"
+CLOUD_DIRECTORY="/home"
+
+BACKUP_DIRECTORY="borg"
+
 # Clean up logfile
 if [ -f "$LOGFILE" ]
 then
@@ -46,14 +52,14 @@ then
 	MOUNT_DIRECTORY="/mnt/cloud"
 
 	mkdir --parents "${MOUNT_DIRECTORY}"
-	sshfs -o allow_root,uid=0,gid=0 -p 23 cloud:/home "${MOUNT_DIRECTORY}"
+    sshfs -o allow_root,uid=0,gid=0 -p 23 "${CLOUD_USER}"@"${CLOUD_SERVER}":"${CLOUD_DIRECTORY}" "${MOUNT_DIRECTORY}"
 else
 	echo "Unknown target ${target}"
 	exit 1
 fi
 
 # Create backup
-export BORG_REPO="${MOUNT_DIRECTORY}/borg"
+export BORG_REPO="${MOUNT_DIRECTORY}/${BACKUP_DIRECTORY}"
 
 if [[ -z $BORG_PASSPHRASE ]]
 then
