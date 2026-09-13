@@ -102,7 +102,7 @@ fi
 
 if [[ -z $REPORT_URL ]]
 then
-    ./mail.sh "Backup completed" < backup.log
+    ./mail.sh "Backup completed" < "$LOGFILE"
 elif
     curl -s "${REPORT_URL}"
 fi
