@@ -4,6 +4,9 @@
 # ssh-keygen -t ed25519 -C "$(hostname)" -N ""
 # ssh-copy-id -p 23 -s <user>@<box>
 
+# Run cloud backup in cron at 00h00:
+# 0 0 * * * cd <work dir> && BORG_PASSPHRASE=$(cat ./backup_secret) ./backup.sh cloud
+
 LOGFILE="backup.log"
 
 # Clean up logfile
