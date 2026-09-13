@@ -11,6 +11,7 @@ LOGFILE="backup.log"
 
 CLOUD_SERVER="<server>"
 CLOUD_USER="<user>"
+CLOUD_PORT="23"
 CLOUD_DIRECTORY="/home"
 
 BACKUP_DIRECTORY="borg"
@@ -52,7 +53,7 @@ then
 	MOUNT_DIRECTORY="/mnt/cloud"
 
 	mkdir --parents "${MOUNT_DIRECTORY}"
-    sshfs -o allow_root,uid=0,gid=0 -p 23 "${CLOUD_USER}"@"${CLOUD_SERVER}":"${CLOUD_DIRECTORY}" "${MOUNT_DIRECTORY}"
+    sshfs -o allow_root,uid=0,gid=0 -p ${CLOUD_PORT} "${CLOUD_USER}"@"${CLOUD_SERVER}":"${CLOUD_DIRECTORY}" "${MOUNT_DIRECTORY}"
 else
 	echo "Unknown target ${target}"
 	exit 1
