@@ -15,7 +15,7 @@ fi
 # Run screen if not already inside
 if [ -z "$STY" ]
 then
-	exec screen -L -Logfile "$LOGFILE" -S backup /bin/bash "$0"
+	exec screen -L -Logfile "$LOGFILE" -dmS backup /bin/bash "$0"
 fi
 
 if [ ! "${1}" ]
