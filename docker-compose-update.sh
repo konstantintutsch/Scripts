@@ -31,9 +31,10 @@ function update_docker {
 
         docker build -f Dockerfile --no-cache --build-arg ANKI_VERSION="${anki_version}" -t anki-sync-server . || return 1
         cd ../../../ || return 1
+    else
+        docker-compose pull || return 1
     fi
 
-    docker-compose pull || return 1
     docker-compose up --force-recreate --detach || return 1
 
     if [[ $app == *"davis"* ]]
