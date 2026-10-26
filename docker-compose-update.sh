@@ -18,6 +18,11 @@ function update_docker {
 
     cd "$app" || return 1
 
+    if [[ -f "Dockerfile" ]]
+    then
+        docker build --pull .
+    fi
+
     if [[ $app == *"anki"* ]]
     then
         cd build || return 1
