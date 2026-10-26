@@ -20,7 +20,7 @@ function update_docker {
 
     if [[ -f "Dockerfile" ]]
     then
-        docker build --no-cache --pull .
+        docker compose build --no-cache --pull
     fi
 
     if [[ $app == *"anki"* ]]
