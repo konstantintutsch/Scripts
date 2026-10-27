@@ -33,10 +33,10 @@ function update_docker {
         cd ../../../ || return 1
     else
         docker compose build --no-cache --pull || return 1
-        docker-compose pull || return 1
+        docker compose pull || return 1
     fi
 
-    docker-compose up --force-recreate --detach || return 1
+    docker compose up --force-recreate --detach || return 1
 
     if [[ $app == *"davis"* ]]
     then
