@@ -17,12 +17,7 @@ function update_docker {
     app=${1}
 
     cd "$app" || return 1
-
-    if [[ -f "Dockerfile" ]]
-    then
-        docker compose build --no-cache --pull
-    fi
-
+ 
     if [[ $app == *"anki"* ]]
     then
         cd build || return 1
@@ -37,6 +32,7 @@ function update_docker {
         docker build -f Dockerfile --no-cache --build-arg ANKI_VERSION="${anki_version}" -t anki-sync-server . || return 1
         cd ../../../ || return 1
     else
+        docker compose build --no-cache --pull || return 1
         docker-compose pull || return 1
     fi
 
